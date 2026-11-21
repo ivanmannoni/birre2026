@@ -30,7 +30,6 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* Header stile Birrificio */
     header {
       background: linear-gradient(135deg, #291d12 0%, #5c3310 55%, #b45309 100%);
       color: #fffbeb;
@@ -56,7 +55,6 @@
       font-weight: 400;
     }
 
-    /* Lucchetto discreto per modalità personale */
     .admin-btn {
       position: absolute;
       top: 14px;
@@ -72,9 +70,25 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.2s;
     }
-    .admin-btn:hover { background: rgba(255, 255, 255, 0.25); }
+
+    .help-btn {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fef3c7;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 1em;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     .container {
       max-width: 680px;
@@ -82,7 +96,36 @@
       padding: 18px 16px 0 16px;
     }
 
-    /* Banner avviso quando attiva modalità Consumo Personale */
+    /* Box Legenda a scomparsa */
+    .legend-box {
+      display: none;
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      font-size: 0.88em;
+      color: #451a03;
+      line-height: 1.45;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .legend-box h4 {
+      margin: 0 0 8px 0;
+      font-size: 1em;
+      color: #92400e;
+      display: flex;
+      justify-content: space-between;
+    }
+    .legend-box p { margin: 5px 0; }
+    .close-legend {
+      background: none;
+      border: none;
+      font-weight: bold;
+      color: #92400e;
+      cursor: pointer;
+      font-size: 1.1em;
+    }
+
     .personal-banner {
       display: none;
       background: #fef3c7;
@@ -106,14 +149,10 @@
       cursor: pointer;
     }
 
-    /* Campo Nome Cliente */
-    .input-group {
-      position: relative;
-      margin-bottom: 16px;
-    }
     .note-input {
       width: 100%;
       padding: 13px 16px;
+      margin-bottom: 16px;
       border: 1.5px solid var(--border);
       border-radius: 14px;
       font-size: 1em;
@@ -121,14 +160,12 @@
       background: white;
       color: var(--text-main);
       box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-      transition: border-color 0.2s;
     }
     .note-input:focus {
       outline: none;
       border-color: var(--accent);
     }
 
-    /* Filtri per tipologia */
     .filters {
       display: flex;
       gap: 8px;
@@ -148,7 +185,6 @@
       font-weight: 600;
       white-space: nowrap;
       cursor: pointer;
-      transition: all 0.2s;
     }
     .filter-pill.active {
       background: var(--primary);
@@ -157,7 +193,6 @@
       box-shadow: 0 2px 6px rgba(180, 83, 9, 0.25);
     }
 
-    /* Scheda Birra */
     .card {
       background: var(--card-bg);
       border-radius: 18px;
@@ -169,7 +204,6 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      transition: transform 0.15s ease, border-color 0.2s;
     }
     .card.selected {
       border-color: var(--primary);
@@ -217,14 +251,8 @@
       background: #ecfdf5;
       color: #065f46;
     }
-    .stock-badge.low {
-      background: #fff7ed;
-      color: #c2410c;
-    }
-    .stock-badge.out {
-      background: #f5f5f4;
-      color: #78716c;
-    }
+    .stock-badge.low { background: #fff7ed; color: #c2410c; }
+    .stock-badge.out { background: #f5f5f4; color: #78716c; }
 
     .beer-desc {
       margin: 0;
@@ -239,25 +267,46 @@
       align-items: center;
       padding-top: 10px;
       border-top: 1px dashed var(--border);
+      gap: 8px;
     }
 
+    /* Indicatori comprensibili */
     .tech-specs {
       display: flex;
-      gap: 12px;
-      font-size: 0.85em;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.82em;
       color: var(--text-muted);
     }
     .tech-pill {
       background: #f5f5f4;
-      padding: 4px 9px;
-      border-radius: 8px;
+      padding: 5px 10px;
+      border-radius: 9px;
       font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
     }
     .tech-pill strong {
       color: var(--text-main);
     }
 
-    /* Controlli + e - */
+    /* Pallini scala amaro */
+    .ibu-dots {
+      display: inline-flex;
+      gap: 3px;
+      margin-left: 2px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #d6d3d1;
+    }
+    .dot.filled {
+      background: #d97706;
+    }
+
     .stepper {
       display: flex;
       align-items: center;
@@ -265,6 +314,7 @@
       padding: 4px;
       border-radius: 12px;
       gap: 6px;
+      flex-shrink: 0;
     }
     .stepper button {
       width: 36px;
@@ -281,16 +331,14 @@
       align-items: center;
       justify-content: center;
     }
-    .stepper button:active { transform: scale(0.94); }
     .stepper button:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
     .stepper span {
-      min-width: 28px;
+      min-width: 26px;
       text-align: center;
       font-weight: 800;
       font-size: 1.1em;
     }
 
-    /* Barra fissa in basso */
     .checkout-bar {
       position: fixed;
       bottom: 0;
@@ -311,16 +359,8 @@
       align-items: center;
       gap: 12px;
     }
-    .total-label {
-      font-size: 0.8em;
-      color: var(--text-muted);
-      display: block;
-    }
-    .total-count {
-      font-size: 1.2em;
-      font-weight: 800;
-      color: var(--text-main);
-    }
+    .total-label { font-size: 0.8em; color: var(--text-muted); display: block; }
+    .total-count { font-size: 1.2em; font-weight: 800; color: var(--text-main); }
     .btn-submit {
       padding: 13px 22px;
       background: linear-gradient(135deg, var(--wa-green) 0%, var(--wa-dark) 100%);
@@ -332,46 +372,44 @@
       font-family: inherit;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
     .btn-submit.personale-btn {
       background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
       box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
     }
-    .btn-submit:disabled {
-      background: #a8a29e;
-      box-shadow: none;
-      cursor: wait;
-    }
-
-    /* Loader */
-    .loader {
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
+    .btn-submit:disabled { background: #a8a29e; box-shadow: none; cursor: wait; }
+    .loader { text-align: center; padding: 40px 20px; color: var(--text-muted); font-weight: 600; }
   </style>
 </head>
 <body>
 
   <header>
-    <button class="admin-btn" onclick="cambiaModalita()" title="Area Riservata / Consumo Personale">🔒</button>
+    <button class="help-btn" onclick="toggleLegenda()" title="Come leggere i valori">?</button>
+    <button class="admin-btn" onclick="cambiaModalita()" title="Area Riservata">🔒</button>
     <h1>🍺 Carta delle Birre</h1>
     <p>Selezione Artigianale • Bottiglie da 0,75 L</p>
   </header>
 
   <div class="container">
+    <div id="legend-box" class="legend-box">
+      <h4>
+        <span>📖 Guida rapida alla scelta</span>
+        <button class="close-legend" onclick="toggleLegenda()">✕</button>
+      </h4>
+      <p><strong>🌡️ Gradazione (ABV):</strong> indica i gradi alcolici della birra (es. 5% è leggera, oltre 7% è più strutturata).</p>
+      <p><strong>🌿 Amaro (IBU):</strong> misura quanto si sente l'amaro del luppolo:<br>
+        <span class="ibu-dots"><span class="dot filled"></span><span class="dot"></span><span class="dot"></span></span> <strong>Dolce / Delicata</strong> (fino a 20 IBU)<br>
+        <span class="ibu-dots"><span class="dot filled"></span><span class="dot filled"></span><span class="dot"></span></span> <strong>Amaro equilibrato</strong> (21 – 40 IBU)<br>
+        <span class="ibu-dots"><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span></span> <strong>Amaro deciso / Luppolata</strong> (oltre 40 IBU)
+      </p>
+    </div>
+
     <div id="personal-banner" class="personal-banner">
       <span>🍺 Modalità Consumo Personale attiva</span>
       <button onclick="tornaCliente()">Esci</button>
     </div>
 
-    <div class="input-group">
-      <input type="text" id="note" class="note-input" placeholder="✍️ Scrivi il tuo nome per l'ordine...">
-    </div>
+    <input type="text" id="note" class="note-input" placeholder="✍️ Scrivi il tuo nome per l'ordine...">
 
     <div id="filtri-container" class="filters"></div>
 
@@ -391,12 +429,17 @@
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzdkYiBPLHRaBfKJti6V5wKBGeG-BbsLafDsuNIRJw3s-tNeBmAN0SN-JV1eS4X-lZB/exec";
     const PIN_PERSONALE = "1234";
-    const TUO_NUMERO_WHATSAPP = "393515917401"; // <-- INSERISCI QUI IL TUO NUMERO CON 39 DAVANTI
+    const TUO_NUMERO_WHATSAPP = "393331234567"; // <-- INSERISCI QUI IL TUO NUMERO CON 39 DAVANTI
 
     let catalogo = [];
     let selezioni = {};
     let modalitaCorrente = "Cliente";
     let filtroAttivo = "Tutte";
+
+    function toggleLegenda() {
+      const box = document.getElementById('legend-box');
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
 
     function cambiaModalita() {
       if (modalitaCorrente === "Cliente") {
@@ -443,12 +486,10 @@
     function renderFiltri() {
       const container = document.getElementById('filtri-container');
       const tipologie = ["Tutte", ...new Set(catalogo.map(b => b.tipologia).filter(t => t && t.trim() !== ""))];
-      
       if (tipologie.length <= 2) {
         container.style.display = "none";
         return;
       }
-
       container.innerHTML = tipologie.map(tipo => `
         <button class="filter-pill ${filtroAttivo === tipo ? 'active' : ''}" onclick="impostaFiltro('${tipo}')">
           ${tipo}
@@ -478,12 +519,34 @@
 
     function aggiornaTotale() {
       let totBottiglie = 0;
-      catalogo.forEach(b => {
-        totBottiglie += (selezioni[b.id] || 0);
-      });
-
+      catalogo.forEach(b => totBottiglie += (selezioni[b.id] || 0));
       document.getElementById('totale-bottiglie').innerText = 
         totBottiglie === 1 ? "1 bottiglia" : `${totBottiglie} bottiglie`;
+    }
+
+    // Genera l'indicatore comprensibile dell'amaro con i 3 pallini
+    function formatAmaro(ibuRaw) {
+      const val = parseFloat(String(ibuRaw).replace(',', '.'));
+      if (isNaN(val)) return `Amaro: <strong>-</strong>`;
+      
+      let livello = 1;
+      let label = "Delicata";
+      if (val > 40) {
+        livello = 3;
+        label = "Decisa";
+      } else if (val > 20) {
+        livello = 2;
+        label = "Media";
+      }
+
+      const dots = `
+        <span class="ibu-dots" title="${val} IBU">
+          <span class="dot ${livello >= 1 ? 'filled' : ''}"></span>
+          <span class="dot ${livello >= 2 ? 'filled' : ''}"></span>
+          <span class="dot ${livello >= 3 ? 'filled' : ''}"></span>
+        </span>
+      `;
+      return `Amaro: <strong>${label}</strong> ${dots}`;
     }
 
     function renderBirre() {
@@ -509,6 +572,10 @@
           stockText = `Ultime ${b.giacenza}`;
         }
 
+        // Formatta la gradazione assicurando il simbolo %
+        let gradazione = b.abv ? String(b.abv).trim() : '-';
+        if (gradazione !== '-' && !gradazione.includes('%')) gradazione += '%';
+
         container.innerHTML += `
           <div id="card-${b.id}" class="card ${esaurita ? 'sold-out' : ''} ${qtyAttuale > 0 ? 'selected' : ''}">
             <div class="card-top">
@@ -522,9 +589,9 @@
             ${b.descrizione ? `<p class="beer-desc">${b.descrizione}</p>` : ''}
             
             <div class="card-bottom">
-              <div class="tech-specs">
-                <span class="tech-pill">ABV <strong>${b.abv || '-'}</strong></span>
-                <span class="tech-pill">IBU <strong>${b.ibu || '-'}</strong></span>
+              <div class="tech-specs" onclick="toggleLegenda()" style="cursor:pointer;" title="Tocca per la legenda">
+                <span class="tech-pill">Gradazione: <strong>${gradazione}</strong></span>
+                <span class="tech-pill">${formatAmaro(b.ibu)}</span>
               </div>
               <div class="stepper">
                 <button onclick="aggiornaQty('${b.id}', -1)" ${esaurita ? 'disabled' : ''}>−</button>
@@ -596,4 +663,4 @@
     caricaBirre();
   </script>
 </body>
-</html> 
+</html>
