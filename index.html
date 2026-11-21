@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Taproom & Cantina - Birre Artigianali 0,75L</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -96,7 +99,6 @@
       padding: 18px 16px 0 16px;
     }
 
-    /* Box Legenda a scomparsa */
     .legend-box {
       display: none;
       background: #fffbeb;
@@ -270,7 +272,6 @@
       gap: 8px;
     }
 
-    /* Indicatori comprensibili */
     .tech-specs {
       display: flex;
       flex-wrap: wrap;
@@ -291,7 +292,6 @@
       color: var(--text-main);
     }
 
-    /* Pallini scala amaro */
     .ibu-dots {
       display: inline-flex;
       gap: 3px;
@@ -429,7 +429,7 @@
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzdkYiBPLHRaBfKJti6V5wKBGeG-BbsLafDsuNIRJw3s-tNeBmAN0SN-JV1eS4X-lZB/exec";
     const PIN_PERSONALE = "1234";
-    const TUO_NUMERO_WHATSAPP = "39515917401"; // <-- INSERISCI QUI IL TUO NUMERO CON 39 DAVANTI
+    const NUMERO_DESTINATARIO = "393515917401";
 
     let catalogo = [];
     let selezioni = {};
@@ -470,7 +470,7 @@
 
     async function caricaBirre() {
       try {
-        const res = await fetch(API_URL);
+        const res = await fetch(API_URL + "?t=" + Date.now());
         const dati = await res.json();
         catalogo = dati.filter(b => b.nome && b.nome.trim() !== "");
         selezioni = {};
@@ -524,7 +524,6 @@
         totBottiglie === 1 ? "1 bottiglia" : `${totBottiglie} bottiglie`;
     }
 
-    // Genera l'indicatore comprensibile dell'amaro con i 3 pallini
     function formatAmaro(ibuRaw) {
       const val = parseFloat(String(ibuRaw).replace(',', '.'));
       if (isNaN(val)) return `Amaro: <strong>-</strong>`;
@@ -572,7 +571,6 @@
           stockText = `Ultime ${b.giacenza}`;
         }
 
-        // Formatta la gradazione assicurando il simbolo %
         let gradazione = b.abv ? String(b.abv).trim() : '-';
         if (gradazione !== '-' && !gradazione.includes('%')) gradazione += '%';
 
@@ -646,8 +644,8 @@
           testo += righeWhatsApp.join('\n');
           testo += `\n\n📦 *Totale:* ${totBottiglie} ${totBottiglie === 1 ? 'bottiglia' : 'bottiglie'}`;
 
-          const urlWA = `https://api.whatsapp.com/send?phone=${TUO_NUMERO_WHATSAPP}&text=${encodeURIComponent(testo)}`;
-          window.location.href = urlWA;
+          const linkFinale = "https://api.whatsapp.com/send/?phone=" + NUMERO_DESTINATARIO + "&text=" + encodeURIComponent(testo) + "&type=phone_number&app_absent=0";
+          window.location.assign(linkFinale);
         } else {
           alert("Consumo personale scaricato dal magazzino!");
         }
