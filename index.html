@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carta delle Birre 0,75L</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; max-width: 720px; margin: 20px auto; padding: 0 15px 90px 15px; background: #f4f5f7; color: #1f2937; }
+    h2 { text-align: center; color: #92400e; margin-bottom: 18px; }
+    .mode-bar { display: flex; justify-content: space-between; align-items: center; background: #e5e7eb; padding: 10px 14px; border-radius: 10px; margin-bottom: 15px; }
+    .mode-badge { font-weight: bold; font-size: 0.95em; }
+    .mode-badge.cliente { color: #065f46; }
+    .mode-badge.personale { color: #b45309; }
+    .btn-mode { background: #374151; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.85em; cursor: pointer; }
+    .note-input { width: 100%; padding: 10px 12px; margin-bottom: 16px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1em; box-sizing: border-box; }
+    .card { background: white; padding: 16px; margin-bottom: 12px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.06); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .info h3 { margin: 0 0 6px 0; font-size: 1.15em; }
+    .badge { font-size: 0.75em; background: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 5px; font-weight: 700; vertical-align: middle; margin-left: 4px; }
+    .specs { font-size: 0.85em; color: #4b5563; margin-bottom: 6px; }
+    .desc { font-size: 0.9em; color: #374151; margin: 0; line-height: 1.35; }
+    .stepper { display: flex; align-items: center; gap: 8px; }
+    .stepper button { width: 34px; height: 34px; border-radius: 8px; border: 1px solid #d1d5db; background: #f9fafb; font-size: 1.2em; font-weight: bold; cursor: pointer; color: #111827; padding: 0; margin: 0; }
+    .stepper button:disabled { opacity: 0.35; cursor: not-allowed; }
+    .stepper span { min-width: 24px; text-align: center; font-weight: bold; font-size: 1.1em; }
+    
+    .checkout-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e5e7eb; padding: 12px 15px; box-shadow: 0 -3px 10px rgba(0,0,0,0.08); }
+    .checkout-inner { max-width: 720px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 15px; }
+    .total-box { font-size: 0.95em; color: #4b5563; }
+    .total-count { font-size: 1.25em; font-weight: 800; color: #111827; display: block; }
+    .btn-submit { padding: 12px 20px; background: #25D366; color: white; border: none; border-radius: 10px; font-size: 1em; font-weight: bold; cursor: pointer; box-shadow: 0 3px 6px rgba(37, 211, 102, 0.3); }
+    .btn-submit.personale-btn { background: #d97706; box-shadow: 0 3px 6px rgba(217, 119, 6, 0.25); }
+    .btn-submit:disabled { background: #9ca3af; box-shadow: none; cursor: wait; }
+  </style>
+</head>
+<body>
+
+  <h2>🍺 Carta delle Birre (0,75L)</h2>
+
+  <div class="mode-bar">
+    <span id="label-modalita" class="mode-badge cliente">Modalità: 🛒 Ordine Cliente</span>
+    <button class="btn-mode" onclick="cambiaModalita()">Cambia Modalità</button>
+  </div>
+
+  <input type="text" id="note" class="note-input" placeholder="Il tuo nome o nota per l'ordine">
+
+  <div id="lista-birre" style="text-align:center; padding: 20px;">Caricamento catalogo in corso...</div>
+
+  <div class="checkout-bar">
+    <div class="checkout-inner">
+      <div class="total-box">
+        <span>Selezione attuale:</span>
+        <span id="totale-bottiglie" class="total-count">0 bottiglie</span>
+      </div>
+      <button id="btn-invia" class="btn-submit" onclick="inviaOrdine()">Ordina su WhatsApp</button>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbzdkYiBPLHRaBfKJti6V5wKBGeG-BbsLafDsuNIRJw3s-tNeBmAN0SN-JV1eS4X-lZB/exec";
+    const PIN_PERSONALE = "1234";
+    const TUO_NUMERO_WHATSAPP = "393331234567"; // <-- SOSTITUISCI CON IL TUO NUMERO CON 39 DAVANTI
+
+    let catalogo = [];
+    let selezioni = {};
+    let modalitaCorrente = "Cliente";
+
+    function cambiaModalita() {
+      const btn = document.getElementById("btn-invia");
+      const lbl = document.getElementById("label-modalita");
+
+      if (modalitaCorrente === "Cliente") {
+        const pin = prompt("Inserisci il PIN per attivare il Consumo Personale:");
+        if (pin !== PIN_PERSONALE) {
+          if (pin !== null) alert("PIN errato.");
+          return;
+        }
+        modalitaCorrente = "Consumo Personale";
+        lbl.innerText = "Modalità: 🍺 Consumo Personale";
+        lbl.className = "mode-badge personale";
+        btn.innerText = "Scarica Consumo";
+        btn.classList.add("personale-btn");
+      } else {
+        modalitaCorrente = "Cliente";
+        lbl.innerText = "Modalità: 🛒 Ordine Cliente";
+        lbl.className = "mode-badge cliente";
+        btn.innerText = "Ordina su WhatsApp";
+        btn.classList.remove("personale-btn");
+      }
+    }
+
+    async function caricaBirre() {
+      try {
+        const res = await fetch(API_URL);
+        const dati = await res.json();
+        // Filtra automaticamente le righe che non hanno un nome compilato
+        catalogo = dati.filter(b => b.nome && b.nome.trim() !== "");
+        selezioni = {};
+        catalogo.forEach(b => selezioni[b.id] = 0);
+        renderBirre();
+        aggiornaTotale();
+      } catch (e) {
+        document.getElementById('lista-birre').innerText = "Errore di connessione al foglio Google. Ricarica la pagina.";
+      }
+    }
+
+    function aggiornaQty(id, delta) {
+      const birra = catalogo.find(b => b.id === id);
+      if (!birra) return;
+      const nuova = (selezioni[id] || 0) + delta;
+      if (nuova >= 0 && nuova <= birra.giacenza) {
+        selezioni[id] = nuova;
+        document.getElementById(`val-${id}`).innerText = nuova;
+        aggiornaTotale();
+      }
+    }
+
+    function aggiornaTotale() {
+      let totBottiglie = 0;
+      catalogo.forEach(b => {
+        totBottiglie += (selezioni[b.id] || 0);
+      });
+
+      document.getElementById('totale-bottiglie').innerText = 
+        totBottiglie === 1 ? "1 bottiglia da 0,75L" : `${totBottiglie} bottiglie da 0,75L`;
+    }
+
+    function renderBirre() {
+      const container = document.getElementById('lista-birre');
+      container.innerHTML = '';
+      
+      catalogo.forEach(b => {
+        const esaurita = b.giacenza <= 0;
+        const badgeTipologia = b.tipologia ? `<span class="badge">${b.tipologia}</span>` : '';
+        container.innerHTML += `
+          <div class="card" style="opacity: ${esaurita ? '0.55' : '1'}">
+            <div class="info">
+              <h3>${b.nome} ${badgeTipologia}</h3>
+              <div class="specs">ABV: <strong>${b.abv || '-'}</strong> | IBU: <strong>${b.ibu || '-'}</strong> | Disp: <strong>${b.giacenza} bott.</strong></div>
+              <p class="desc">${b.descrizione || ''}</p>
+            </div>
+            <div class="stepper">
+              <button onclick="aggiornaQty('${b.id}', -1)" ${esaurita ? 'disabled' : ''}>-</button>
+              <span id="val-${b.id}">0</span>
+              <button onclick="aggiornaQty('${b.id}', 1)" ${esaurita ? 'disabled' : ''}>+</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    async function inviaOrdine() {
+      const btn = document.getElementById('btn-invia');
+      const note = document.getElementById('note').value.trim();
+      const ordine = [];
+      let righeWhatsApp = [];
+      let totBottiglie = 0;
+
+      catalogo.forEach(b => {
+        const qty = selezioni[b.id] || 0;
+        if (qty > 0) {
+          ordine.push({ id: b.id, quantita: qty });
+          totBottiglie += qty;
+          const tipoLabel = b.tipologia ? ` (${b.tipologia})` : '';
+          righeWhatsApp.push(`• ${qty}x *${b.nome}*${tipoLabel}`);
+        }
+      });
+
+      if (ordine.length === 0) return alert("Seleziona almeno una bottiglia da 0,75L.");
+
+      if (modalitaCorrente === "Cliente" && !note) {
+        return alert("Per favore, inserisci il tuo nome nel campo in alto prima di inviare l'ordine.");
+      }
+
+      btn.disabled = true;
+      btn.innerText = "Aggiornamento giacenze...";
+
+      try {
+        await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ tipo: modalitaCorrente, note: note, ordine: ordine })
+        });
+
+        document.getElementById('note').value = '';
+        await caricaBirre();
+
+        if (modalitaCorrente === "Cliente") {
+          let testo = `🍺 *NUOVO ORDINE BIRRE (0,75L)*\n`;
+          testo += `👤 *Cliente:* ${note}\n\n`;
+          testo += righeWhatsApp.join('\n');
+          testo += `\n\n📦 *Totale:* ${totBottiglie} ${totBottiglie === 1 ? 'bottiglia' : 'bottiglie'}`;
+
+          const urlWA = `https://wa.me/${TUO_NUMERO_WHATSAPP}?text=${encodeURIComponent(testo)}`;
+          window.location.href = urlWA;
+        } else {
+          alert("Consumo personale scaricato dal magazzino!");
+        }
+
+      } catch (e) {
+        alert("Si è verificato un errore durante l'aggiornamento. Riprova.");
+      } finally {
+        btn.disabled = false;
+        btn.innerText = modalitaCorrente === "Cliente" ? "Ordina su WhatsApp" : "Scarica Consumo";
+      }
+    }
+
+    caricaBirre();
+  </script>
+</body>
+</html>
