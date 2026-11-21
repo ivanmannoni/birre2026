@@ -646,7 +646,7 @@
           testo += righeWhatsApp.join('\n');
           testo += `\n\n📦 *Totale:* ${totBottiglie} ${totBottiglie === 1 ? 'bottiglia' : 'bottiglie'}`;
 
-          const urlWA = `https://wa.me/${TUO_NUMERO_WHATSAPP}?text=${encodeURIComponent(testo)}`;
+          const urlWA = `https://api.whatsapp.com/send?phone=${TUO_NUMERO_WHATSAPP}&text=${encodeURIComponent(testo)}`;
           window.location.href = urlWA;
         } else {
           alert("Consumo personale scaricato dal magazzino!");
