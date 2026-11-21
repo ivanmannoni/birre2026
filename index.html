@@ -379,6 +379,52 @@
     }
     .btn-submit:disabled { background: #a8a29e; box-shadow: none; cursor: wait; }
     .loader { text-align: center; padding: 40px 20px; color: var(--text-muted); font-weight: 600; }
+
+    /* Finestra modale di conferma ordine con link diretto nativo */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 25, 23, 0.72);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-card {
+      background: white;
+      border-radius: 22px;
+      padding: 24px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    }
+    .modal-card h3 { margin: 0 0 8px 0; color: #065f46; font-size: 1.35em; }
+    .modal-card p { margin: 0 0 18px 0; color: var(--text-muted); font-size: 0.95em; line-height: 1.45; }
+    .btn-wa-direct {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: #25D366;
+      color: white;
+      text-decoration: none;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 1.05em;
+      box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+      margin-bottom: 10px;
+    }
+    .btn-close-modal {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.9em;
+      padding: 8px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -426,10 +472,19 @@
     </div>
   </div>
 
+  <!-- Modale con link diretto nativo per evitare il bug del numero troncato -->
+  <div id="wa-modal" class="modal-overlay">
+    <div class="modal-card">
+      <h3>✅ Bottiglie prenotate!</h3>
+      <p>Le giacenze sono state aggiornate. Tocca il pulsante verde qui sotto per inviare il riepilogo su WhatsApp:</p>
+      <a id="wa-direct-link" href="#" target="_blank" rel="noopener" class="btn-wa-direct">📲 Invia messaggio su WhatsApp</a>
+      <button class="btn-close-modal" onclick="chiudiModale()">Chiudi questa finestra</button>
+    </div>
+  </div>
+
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzdkYiBPLHRaBfKJti6V5wKBGeG-BbsLafDsuNIRJw3s-tNeBmAN0SN-JV1eS4X-lZB/exec";
     const PIN_PERSONALE = "1234";
-    const NUMERO_DESTINATARIO = "393515917401";
 
     let catalogo = [];
     let selezioni = {};
@@ -439,6 +494,10 @@
     function toggleLegenda() {
       const box = document.getElementById('legend-box');
       box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function chiudiModale() {
+      document.getElementById('wa-modal').style.display = 'none';
     }
 
     function cambiaModalita() {
@@ -644,8 +703,10 @@
           testo += righeWhatsApp.join('\n');
           testo += `\n\n📦 *Totale:* ${totBottiglie} ${totBottiglie === 1 ? 'bottiglia' : 'bottiglie'}`;
 
-          const linkFinale = "https://api.whatsapp.com/send/?phone=" + NUMERO_DESTINATARIO + "&text=" + encodeURIComponent(testo) + "&type=phone_number&app_absent=0";
-          window.location.assign(linkFinale);
+          const urlDiretto = "https://wa.me/393515917401?text=" + encodeURIComponent(testo);
+          const linkEl = document.getElementById('wa-direct-link');
+          linkEl.href = urlDiretto;
+          document.getElementById('wa-modal').style.display = 'flex';
         } else {
           alert("Consumo personale scaricato dal magazzino!");
         }
