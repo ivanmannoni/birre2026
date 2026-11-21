@@ -3,52 +3,385 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carta delle Birre 0,75L</title>
+  <title>Taproom & Cantina - Birre Artigianali 0,75L</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body { font-family: system-ui, -apple-system, sans-serif; max-width: 720px; margin: 20px auto; padding: 0 15px 90px 15px; background: #f4f5f7; color: #1f2937; }
-    h2 { text-align: center; color: #92400e; margin-bottom: 18px; }
-    .mode-bar { display: flex; justify-content: space-between; align-items: center; background: #e5e7eb; padding: 10px 14px; border-radius: 10px; margin-bottom: 15px; }
-    .mode-badge { font-weight: bold; font-size: 0.95em; }
-    .mode-badge.cliente { color: #065f46; }
-    .mode-badge.personale { color: #b45309; }
-    .btn-mode { background: #374151; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.85em; cursor: pointer; }
-    .note-input { width: 100%; padding: 10px 12px; margin-bottom: 16px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1em; box-sizing: border-box; }
-    .card { background: white; padding: 16px; margin-bottom: 12px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.06); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-    .info h3 { margin: 0 0 6px 0; font-size: 1.15em; }
-    .badge { font-size: 0.75em; background: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 5px; font-weight: 700; vertical-align: middle; margin-left: 4px; }
-    .specs { font-size: 0.85em; color: #4b5563; margin-bottom: 6px; }
-    .desc { font-size: 0.9em; color: #374151; margin: 0; line-height: 1.35; }
-    .stepper { display: flex; align-items: center; gap: 8px; }
-    .stepper button { width: 34px; height: 34px; border-radius: 8px; border: 1px solid #d1d5db; background: #f9fafb; font-size: 1.2em; font-weight: bold; cursor: pointer; color: #111827; padding: 0; margin: 0; }
-    .stepper button:disabled { opacity: 0.35; cursor: not-allowed; }
-    .stepper span { min-width: 24px; text-align: center; font-weight: bold; font-size: 1.1em; }
-    
-    .checkout-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e5e7eb; padding: 12px 15px; box-shadow: 0 -3px 10px rgba(0,0,0,0.08); }
-    .checkout-inner { max-width: 720px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 15px; }
-    .total-box { font-size: 0.95em; color: #4b5563; }
-    .total-count { font-size: 1.25em; font-weight: 800; color: #111827; display: block; }
-    .btn-submit { padding: 12px 20px; background: #25D366; color: white; border: none; border-radius: 10px; font-size: 1em; font-weight: bold; cursor: pointer; box-shadow: 0 3px 6px rgba(37, 211, 102, 0.3); }
-    .btn-submit.personale-btn { background: #d97706; box-shadow: 0 3px 6px rgba(217, 119, 6, 0.25); }
-    .btn-submit:disabled { background: #9ca3af; box-shadow: none; cursor: wait; }
+    :root {
+      --bg: #faf8f5;
+      --card-bg: #ffffff;
+      --primary: #b45309;
+      --primary-dark: #78350f;
+      --accent: #f59e0b;
+      --text-main: #1c1917;
+      --text-muted: #57534e;
+      --border: #e7e5e4;
+      --wa-green: #25D366;
+      --wa-dark: #128C7E;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 0 0 105px 0;
+      background-color: var(--bg);
+      color: var(--text-main);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Header stile Birrificio */
+    header {
+      background: linear-gradient(135deg, #291d12 0%, #5c3310 55%, #b45309 100%);
+      color: #fffbeb;
+      padding: 26px 20px 28px 20px;
+      text-align: center;
+      position: relative;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+      box-shadow: 0 6px 20px rgba(41, 29, 18, 0.18);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.65em;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      margin: 6px 0 0 0;
+      font-size: 0.92em;
+      color: #fde68a;
+      font-weight: 400;
+    }
+
+    /* Lucchetto discreto per modalità personale */
+    .admin-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fef3c7;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 1em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .admin-btn:hover { background: rgba(255, 255, 255, 0.25); }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 18px 16px 0 16px;
+    }
+
+    /* Banner avviso quando attiva modalità Consumo Personale */
+    .personal-banner {
+      display: none;
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      color: #92400e;
+      padding: 10px 14px;
+      border-radius: 12px;
+      margin-bottom: 14px;
+      font-size: 0.9em;
+      font-weight: 600;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .personal-banner button {
+      background: #92400e;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.8em;
+      cursor: pointer;
+    }
+
+    /* Campo Nome Cliente */
+    .input-group {
+      position: relative;
+      margin-bottom: 16px;
+    }
+    .note-input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      font-size: 1em;
+      font-family: inherit;
+      background: white;
+      color: var(--text-main);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      transition: border-color 0.2s;
+    }
+    .note-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    /* Filtri per tipologia */
+    .filters {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+      scrollbar-width: none;
+    }
+    .filters::-webkit-scrollbar { display: none; }
+    .filter-pill {
+      background: white;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-pill.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 2px 6px rgba(180, 83, 9, 0.25);
+    }
+
+    /* Scheda Birra */
+    .card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--accent);
+      box-shadow: 0 4px 12px rgba(28, 25, 23, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform 0.15s ease, border-color 0.2s;
+    }
+    .card.selected {
+      border-color: var(--primary);
+      background: #fffdf9;
+    }
+    .card.sold-out {
+      opacity: 0.55;
+      border-left-color: #a8a29e;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .beer-title {
+      margin: 0;
+      font-size: 1.22em;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .style-badge {
+      display: inline-block;
+      margin-top: 5px;
+      font-size: 0.75em;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: #fef3c7;
+      color: #92400e;
+      padding: 3px 9px;
+      border-radius: 6px;
+    }
+
+    .stock-badge {
+      font-size: 0.78em;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+      background: #ecfdf5;
+      color: #065f46;
+    }
+    .stock-badge.low {
+      background: #fff7ed;
+      color: #c2410c;
+    }
+    .stock-badge.out {
+      background: #f5f5f4;
+      color: #78716c;
+    }
+
+    .beer-desc {
+      margin: 0;
+      font-size: 0.92em;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .card-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .tech-specs {
+      display: flex;
+      gap: 12px;
+      font-size: 0.85em;
+      color: var(--text-muted);
+    }
+    .tech-pill {
+      background: #f5f5f4;
+      padding: 4px 9px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    .tech-pill strong {
+      color: var(--text-main);
+    }
+
+    /* Controlli + e - */
+    .stepper {
+      display: flex;
+      align-items: center;
+      background: #f5f5f4;
+      padding: 4px;
+      border-radius: 12px;
+      gap: 6px;
+    }
+    .stepper button {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      border: none;
+      background: white;
+      font-size: 1.25em;
+      font-weight: 700;
+      color: var(--primary-dark);
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .stepper button:active { transform: scale(0.94); }
+    .stepper button:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
+    .stepper span {
+      min-width: 28px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 1.1em;
+    }
+
+    /* Barra fissa in basso */
+    .checkout-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--border);
+      padding: 12px 16px;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.07);
+      z-index: 100;
+    }
+    .checkout-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .total-label {
+      font-size: 0.8em;
+      color: var(--text-muted);
+      display: block;
+    }
+    .total-count {
+      font-size: 1.2em;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+    .btn-submit {
+      padding: 13px 22px;
+      background: linear-gradient(135deg, var(--wa-green) 0%, var(--wa-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 1em;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-submit.personale-btn {
+      background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
+      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+    }
+    .btn-submit:disabled {
+      background: #a8a29e;
+      box-shadow: none;
+      cursor: wait;
+    }
+
+    /* Loader */
+    .loader {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
 
-  <h2>🍺 Carta delle Birre (0,75L)</h2>
+  <header>
+    <button class="admin-btn" onclick="cambiaModalita()" title="Area Riservata / Consumo Personale">🔒</button>
+    <h1>🍺 Carta delle Birre</h1>
+    <p>Selezione Artigianale • Bottiglie da 0,75 L</p>
+  </header>
 
-  <div class="mode-bar">
-    <span id="label-modalita" class="mode-badge cliente">Modalità: 🛒 Ordine Cliente</span>
-    <button class="btn-mode" onclick="cambiaModalita()">Cambia Modalità</button>
+  <div class="container">
+    <div id="personal-banner" class="personal-banner">
+      <span>🍺 Modalità Consumo Personale attiva</span>
+      <button onclick="tornaCliente()">Esci</button>
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="note" class="note-input" placeholder="✍️ Scrivi il tuo nome per l'ordine...">
+    </div>
+
+    <div id="filtri-container" class="filters"></div>
+
+    <div id="lista-birre" class="loader">🍺 Spillatura catalogo in corso...</div>
   </div>
-
-  <input type="text" id="note" class="note-input" placeholder="Il tuo nome o nota per l'ordine">
-
-  <div id="lista-birre" style="text-align:center; padding: 20px;">Caricamento catalogo in corso...</div>
 
   <div class="checkout-bar">
     <div class="checkout-inner">
-      <div class="total-box">
-        <span>Selezione attuale:</span>
+      <div>
+        <span class="total-label">Bottiglie selezionate (0,75L)</span>
         <span id="totale-bottiglie" class="total-count">0 bottiglie</span>
       </div>
       <button id="btn-invia" class="btn-submit" onclick="inviaOrdine()">Ordina su WhatsApp</button>
@@ -58,16 +391,14 @@
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbzdkYiBPLHRaBfKJti6V5wKBGeG-BbsLafDsuNIRJw3s-tNeBmAN0SN-JV1eS4X-lZB/exec";
     const PIN_PERSONALE = "1234";
-    const TUO_NUMERO_WHATSAPP = "393515917401"; // <-- SOSTITUISCI CON IL TUO NUMERO CON 39 DAVANTI
+    const TUO_NUMERO_WHATSAPP = "393331234567"; // <-- INSERISCI QUI IL TUO NUMERO CON 39 DAVANTI
 
     let catalogo = [];
     let selezioni = {};
     let modalitaCorrente = "Cliente";
+    let filtroAttivo = "Tutte";
 
     function cambiaModalita() {
-      const btn = document.getElementById("btn-invia");
-      const lbl = document.getElementById("label-modalita");
-
       if (modalitaCorrente === "Cliente") {
         const pin = prompt("Inserisci il PIN per attivare il Consumo Personale:");
         if (pin !== PIN_PERSONALE) {
@@ -75,32 +406,60 @@
           return;
         }
         modalitaCorrente = "Consumo Personale";
-        lbl.innerText = "Modalità: 🍺 Consumo Personale";
-        lbl.className = "mode-badge personale";
+        document.getElementById("personal-banner").style.display = "flex";
+        document.getElementById("note").placeholder = "Nota consumo personale (es. Cena, Degustazione...)";
+        const btn = document.getElementById("btn-invia");
         btn.innerText = "Scarica Consumo";
         btn.classList.add("personale-btn");
       } else {
-        modalitaCorrente = "Cliente";
-        lbl.innerText = "Modalità: 🛒 Ordine Cliente";
-        lbl.className = "mode-badge cliente";
-        btn.innerText = "Ordina su WhatsApp";
-        btn.classList.remove("personale-btn");
+        tornaCliente();
       }
+    }
+
+    function tornaCliente() {
+      modalitaCorrente = "Cliente";
+      document.getElementById("personal-banner").style.display = "none";
+      document.getElementById("note").placeholder = "✍️ Scrivi il tuo nome per l'ordine...";
+      const btn = document.getElementById("btn-invia");
+      btn.innerText = "Ordina su WhatsApp";
+      btn.classList.remove("personale-btn");
     }
 
     async function caricaBirre() {
       try {
         const res = await fetch(API_URL);
         const dati = await res.json();
-        // Filtra automaticamente le righe che non hanno un nome compilato
         catalogo = dati.filter(b => b.nome && b.nome.trim() !== "");
         selezioni = {};
         catalogo.forEach(b => selezioni[b.id] = 0);
+        renderFiltri();
         renderBirre();
         aggiornaTotale();
       } catch (e) {
-        document.getElementById('lista-birre').innerText = "Errore di connessione al foglio Google. Ricarica la pagina.";
+        document.getElementById('lista-birre').innerText = "Errore di connessione al catalogo. Ricarica la pagina.";
       }
+    }
+
+    function renderFiltri() {
+      const container = document.getElementById('filtri-container');
+      const tipologie = ["Tutte", ...new Set(catalogo.map(b => b.tipologia).filter(t => t && t.trim() !== ""))];
+      
+      if (tipologie.length <= 2) {
+        container.style.display = "none";
+        return;
+      }
+
+      container.innerHTML = tipologie.map(tipo => `
+        <button class="filter-pill ${filtroAttivo === tipo ? 'active' : ''}" onclick="impostaFiltro('${tipo}')">
+          ${tipo}
+        </button>
+      `).join('');
+    }
+
+    function impostaFiltro(tipo) {
+      filtroAttivo = tipo;
+      renderFiltri();
+      renderBirre();
     }
 
     function aggiornaQty(id, delta) {
@@ -110,6 +469,9 @@
       if (nuova >= 0 && nuova <= birra.giacenza) {
         selezioni[id] = nuova;
         document.getElementById(`val-${id}`).innerText = nuova;
+        const card = document.getElementById(`card-${id}`);
+        if (nuova > 0) card.classList.add('selected');
+        else card.classList.remove('selected');
         aggiornaTotale();
       }
     }
@@ -121,27 +483,54 @@
       });
 
       document.getElementById('totale-bottiglie').innerText = 
-        totBottiglie === 1 ? "1 bottiglia da 0,75L" : `${totBottiglie} bottiglie da 0,75L`;
+        totBottiglie === 1 ? "1 bottiglia" : `${totBottiglie} bottiglie`;
     }
 
     function renderBirre() {
       const container = document.getElementById('lista-birre');
+      container.className = '';
       container.innerHTML = '';
+
+      const filtrato = filtroAttivo === "Tutte" 
+        ? catalogo 
+        : catalogo.filter(b => b.tipologia === filtroAttivo);
       
-      catalogo.forEach(b => {
+      filtrato.forEach(b => {
         const esaurita = b.giacenza <= 0;
-        const badgeTipologia = b.tipologia ? `<span class="badge">${b.tipologia}</span>` : '';
+        const qtyAttuale = selezioni[b.id] || 0;
+        let stockClass = "stock-badge";
+        let stockText = `${b.giacenza} disp.`;
+
+        if (esaurita) {
+          stockClass += " out";
+          stockText = "Esaurita";
+        } else if (b.giacenza <= 3) {
+          stockClass += " low";
+          stockText = `Ultime ${b.giacenza}`;
+        }
+
         container.innerHTML += `
-          <div class="card" style="opacity: ${esaurita ? '0.55' : '1'}">
-            <div class="info">
-              <h3>${b.nome} ${badgeTipologia}</h3>
-              <div class="specs">ABV: <strong>${b.abv || '-'}</strong> | IBU: <strong>${b.ibu || '-'}</strong> | Disp: <strong>${b.giacenza} bott.</strong></div>
-              <p class="desc">${b.descrizione || ''}</p>
+          <div id="card-${b.id}" class="card ${esaurita ? 'sold-out' : ''} ${qtyAttuale > 0 ? 'selected' : ''}">
+            <div class="card-top">
+              <div>
+                <h3 class="beer-title">${b.nome}</h3>
+                ${b.tipologia ? `<span class="style-badge">${b.tipologia}</span>` : ''}
+              </div>
+              <span class="${stockClass}">${stockText}</span>
             </div>
-            <div class="stepper">
-              <button onclick="aggiornaQty('${b.id}', -1)" ${esaurita ? 'disabled' : ''}>-</button>
-              <span id="val-${b.id}">0</span>
-              <button onclick="aggiornaQty('${b.id}', 1)" ${esaurita ? 'disabled' : ''}>+</button>
+            
+            ${b.descrizione ? `<p class="beer-desc">${b.descrizione}</p>` : ''}
+            
+            <div class="card-bottom">
+              <div class="tech-specs">
+                <span class="tech-pill">ABV <strong>${b.abv || '-'}</strong></span>
+                <span class="tech-pill">IBU <strong>${b.ibu || '-'}</strong></span>
+              </div>
+              <div class="stepper">
+                <button onclick="aggiornaQty('${b.id}', -1)" ${esaurita ? 'disabled' : ''}>−</button>
+                <span id="val-${b.id}">${qtyAttuale}</span>
+                <button onclick="aggiornaQty('${b.id}', 1)" ${esaurita ? 'disabled' : ''}>+</button>
+              </div>
             </div>
           </div>
         `;
@@ -168,11 +557,12 @@
       if (ordine.length === 0) return alert("Seleziona almeno una bottiglia da 0,75L.");
 
       if (modalitaCorrente === "Cliente" && !note) {
-        return alert("Per favore, inserisci il tuo nome nel campo in alto prima di inviare l'ordine.");
+        document.getElementById('note').focus();
+        return alert("Inserisci il tuo nome nel campo in alto prima di inviare l'ordine.");
       }
 
       btn.disabled = true;
-      btn.innerText = "Aggiornamento giacenze...";
+      btn.innerText = "Aggiornamento...";
 
       try {
         await fetch(API_URL, {
@@ -196,7 +586,7 @@
         }
 
       } catch (e) {
-        alert("Si è verificato un errore durante l'aggiornamento. Riprova.");
+        alert("Errore di rete durante l'invio. Riprova.");
       } finally {
         btn.disabled = false;
         btn.innerText = modalitaCorrente === "Cliente" ? "Ordina su WhatsApp" : "Scarica Consumo";
@@ -206,4 +596,4 @@
     caricaBirre();
   </script>
 </body>
-</html>
+</html> 
